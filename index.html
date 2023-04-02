@@ -6,19 +6,18 @@
 <body>
 
 <script>
-// Redirect to another website
-window.location.replace("https://www.babagyaani.com/");
-</script>
-
-<h1>This is a Heading</h1>
-<p>This is a paragraph.</p>
-
-<script>
 // Get all the file names in the current directory
 fetch('.')
-  .then(response => response.text())
+  .then(response => {
+    if (response.ok) {
+      // If the fetch is successful, parse the HTML content and get all the links
+      return response.text();
+    } else {
+      // If the fetch fails, redirect to another website
+      throw new Error('Failed to fetch directory contents');
+    }
+  })
   .then(data => {
-    // Parse the HTML content and get all the links
     const parser = new DOMParser();
     const htmlDoc = parser.parseFromString(data, 'text/html');
     const links = Array.from(htmlDoc.querySelectorAll('a'));
@@ -30,8 +29,16 @@ fetch('.')
 
     // Add the links to the HTML content
     document.body.insertAdjacentHTML('beforeend', htmlLinks.join(''));
+  })
+  .catch(error => {
+    // If there's an error, redirect to another website
+    console.error(error);
+    window.location.replace("https://www.babagyaani.com/");
   });
 </script>
+
+<h1>This is a Heading</h1>
+<p>This is a paragraph.</p>
 
 </body>
 </html>
