@@ -4,10 +4,34 @@
 <title>Page Title</title>
 </head>
 <body>
-<script>window.location.replace("https://www.babagyaani.com/");</script>
+
+<script>
+// Redirect to another website
+window.location.replace("https://www.babagyaani.com/");
+</script>
 
 <h1>This is a Heading</h1>
 <p>This is a paragraph.</p>
+
+<script>
+// Get all the file names in the current directory
+fetch('.')
+  .then(response => response.text())
+  .then(data => {
+    // Parse the HTML content and get all the links
+    const parser = new DOMParser();
+    const htmlDoc = parser.parseFromString(data, 'text/html');
+    const links = Array.from(htmlDoc.querySelectorAll('a'));
+
+    // Filter out non-HTML files and create links to the remaining files
+    const htmlLinks = links
+      .filter(link => link.getAttribute('href').endsWith('.html'))
+      .map(link => `<a href="${link.getAttribute('href')}">${link.innerText}</a>`);
+
+    // Add the links to the HTML content
+    document.body.insertAdjacentHTML('beforeend', htmlLinks.join(''));
+  });
+</script>
 
 </body>
 </html>
